@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇游戏</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>贪吃蛇</h1>
+            <div class="game-info">
+                <div class="score-info">
+                    <span>分数: <span id="score">0</span></span>
+                    <span>最高分: <span id="highScore">0</span></span>
+                </div>
+                <div class="level-info">
+                    <span>关卡: <span id="level">1</span></span>
+                    <span>速度: <span id="speed">1</span></span>
+                </div>
+            </div>
+        </header>
+
+        <div class="game-area">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <div class="game-overlay" id="gameOverlay">
+                <div class="overlay-content">
+                    <h2 id="overlayTitle">贪吃蛇游戏</h2>
+                    <p id="overlayMessage">按空格键开始游戏</p>
+                    <div class="controls-info">
+                        <p>使用方向键或WASD控制</p>
+                        <p>空格键: 开始/暂停</p>
+                        <p>R键: 重新开始</p>
+                    </div>
+                    <button id="startButton" class="game-button">开始游戏</button>
+                    <button id="restartButton" class="game-button" style="display: none;">重新开始</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <button id="pauseButton" class="control-button">暂停</button>
+            <button id="muteButton" class="control-button">静音</button>
+            <div class="mobile-controls">
+                <div class="control-row">
+                    <button class="direction-btn" data-direction="up">↑</button>
+                </div>
+                <div class="control-row">
+                    <button class="direction-btn" data-direction="left">←</button>
+                    <button class="direction-btn" data-direction="down">↓</button>
+                    <button class="direction-btn" data-direction="right">→</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="level-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-text">进度: <span id="progressText">0/5</span></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
