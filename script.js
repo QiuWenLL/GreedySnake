@@ -25,7 +25,10 @@ class SnakeGame {
         this.dy = 0;
         
         // 食物
-        this.apple = this.generateApple();
+        this.apples = [];
+        this.maxApples = 20;
+        this.minApples = 10;
+        this.generateApples();
         
         // 游戏数据
         this.score = 0;
@@ -34,6 +37,7 @@ class SnakeGame {
         this.baseSpeed = 200;
         this.applesEaten = 0;
         this.applesPerLevel = 5;
+        this.generateApples();
         
         // UI元素
         this.scoreElement = document.getElementById('score');
@@ -195,9 +199,19 @@ class SnakeGame {
                 x: Math.floor(Math.random() * this.tileCount),
                 y: Math.floor(Math.random() * this.tileCount)
             };
-        } while (this.isSnakePosition(apple.x, apple.y));
+        } while (this.isSnakePosition(apple.x, apple.y) || this.isApplePosition(apple.x, apple.y));
         
         return apple;
+    }
+    
+    isApplePosition(x, y) {
+        return this.apples.some(apple => apple.x === x && apple.y === y);
+    }
+    
+    generateApples() {
+        while (this.apples.length < this.minApples && this.apples.length < this.maxApples) {
+            this.apples.push(this.generateApple());
+        }
     }
 
     isSnakePosition(x, y) {
@@ -278,7 +292,7 @@ class SnakeGame {
         this.update();
         this.draw();
         
-        const currentSpeed = Math.max(50, this.baseSpeed - (this.level - 1) * 20);
+        const currentSpeed = this.baseSpeed;
         setTimeout(() => this.gameLoop(), currentSpeed);
     }
 
@@ -303,7 +317,9 @@ class SnakeGame {
         this.snake.unshift(head);
         
         // 检查是否吃到食物
-        if (head.x === this.apple.x && head.y === this.apple.y) {
+        const eatenAppleIndex = this.apples.findIndex(apple => head.x === apple.x && head.y === apple.y);
+        if (eatenAppleIndex !== -1) {
+            this.apples.splice(eatenAppleIndex, 1);
             this.eatApple();
         } else {
             this.snake.pop();
@@ -315,7 +331,7 @@ class SnakeGame {
         this.applesEaten++;
         
         this.playEatSound();
-        this.apple = this.generateApple();
+        this.generateApples();
         
         // 检查是否升级
         if (this.applesEaten % this.applesPerLevel === 0) {
@@ -332,7 +348,6 @@ class SnakeGame {
 
     levelUp() {
         this.level++;
-        this.speed = this.level;
         this.playLevelUpSound();
         
         // 显示升级提示
@@ -413,6 +428,9 @@ class SnakeGame {
         // 绘制网格
         this.drawGrid();
         
+        // 检查并生成食物
+        this.generateApples();
+        
         // 绘制蛇
         this.drawSnake();
         
@@ -481,22 +499,24 @@ class SnakeGame {
     }
 
     drawApple() {
-        this.ctx.fillStyle = '#ff4444';
-        this.ctx.fillRect(
-            this.apple.x * this.gridSize + 2, 
-            this.apple.y * this.gridSize + 2, 
-            this.gridSize - 4, 
-            this.gridSize - 4
-        );
-        
-        // 苹果的叶子
-        this.ctx.fillStyle = '#00ff00';
-        this.ctx.fillRect(
-            this.apple.x * this.gridSize + this.gridSize - 6, 
-            this.apple.y * this.gridSize + 2, 
-            4, 
-            4
-        );
+        this.apples.forEach(apple => {
+            this.ctx.fillStyle = '#ff4444';
+            this.ctx.fillRect(
+                apple.x * this.gridSize + 2, 
+                apple.y * this.gridSize + 2, 
+                this.gridSize - 4, 
+                this.gridSize - 4
+            );
+            
+            // 苹果的叶子
+            this.ctx.fillStyle = '#00ff00';
+            this.ctx.fillRect(
+                apple.x * this.gridSize + this.gridSize - 6, 
+                apple.y * this.gridSize + 2, 
+                4, 
+                4
+            );
+        });
     }
 
     updateDisplay() {
